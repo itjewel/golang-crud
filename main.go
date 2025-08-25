@@ -16,10 +16,11 @@ func getUserinfoSecond(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(w, "I am Here")
 }
 func main() {
-	http.HandleFunc("/", getUserinfo)
-	http.HandleFunc("/getUserinfo-second", getUserinfoSecond)
+	mux := http.NewServeMux()
+	mux.HandleFunc("/", getUserinfo)
+	mux.HandleFunc("/getUserinfo-second", getUserinfoSecond)
 	fmt.Println("Server is running at http://localhost:8000")
-	err := http.ListenAndServe(":8000", nil)
+	err := http.ListenAndServe(":8000", mux)
 	if err != nil {
 		log.Fatal("server failed", err)
 	}
