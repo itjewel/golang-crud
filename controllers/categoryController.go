@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"golang-crud/database"
@@ -57,22 +58,27 @@ defer rows.Close()
 
 func AddCategory(w http.ResponseWriter, r *http.Request) {
 
-	var c models.Category
+	var c models.CategoryCreateRequest
 	err := json.NewDecoder(r.Body).Decode(&c)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	res, err := database.DB.Exec("INSERT INTO categories (name) VALUES (?)", c.Name)
+
+	response, err := database.DB.Exec("INSERT INTO categories (name) VALUES (?)", c.Name)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+	id, _ := response.LastInsertId()
 
-	id, _ := res.LastInsertId()
-	c.ID = int(id)
+	fmt.Println(response, id)
+	customeRes := models.Category{
+		ID: int(id),
+		Name: c.Name,
+	}
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(c)
+	json.NewEncoder(w).Encode(customeRes)
 }
