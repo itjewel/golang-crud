@@ -11,7 +11,6 @@ import (
 var DB *sql.DB
 
 func Connect() {
-	// Correct DSN: user:password@tcp(host:port)/dbname
 	dsn := "root:admin@tcp(127.0.0.1:3306)/go-gin-crud"
 	db, err := sql.Open("mysql", dsn)
 	if err != nil {

@@ -7,6 +7,6 @@ import (
 )
 
 func CategoryRoutes(mux *http.ServeMux) {
-	mux.HandleFunc("/categories", controllers.GetCategories)   // GET
-	mux.HandleFunc("/categories/add", controllers.AddCategory) // POST
+	mux.HandleFunc("GET /categories", controllers.GetCategories)   // GET
+	mux.HandleFunc("POST /categories/add", controllers.AddCategory) // POST
 }

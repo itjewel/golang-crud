@@ -28,10 +28,6 @@ func GetCategories(w http.ResponseWriter, r *http.Request) {
 }
 
 func AddCategory(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "POST" {
-		http.Error(w, "Only POST allowed", http.StatusMethodNotAllowed)
-		return
-	}
 
 	var c models.Category
 	err := json.NewDecoder(r.Body).Decode(&c)
