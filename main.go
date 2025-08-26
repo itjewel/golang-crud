@@ -5,24 +5,19 @@ import (
 	"log"
 	"net/http"
 
-	_ "github.com/go-sql-driver/mysql"
+	"golang-crud/database"
+	"golang-crud/routes"
 )
 
-func getUserinfo(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Hello ai ma user")
-
-}
-func getUserinfoSecond(w http.ResponseWriter, r *http.Request) {
-	fmt.Println(w, "I am Here")
-}
 func main() {
+	database.Connect()
+
 	mux := http.NewServeMux()
-	mux.HandleFunc("/", getUserinfo)
-	mux.HandleFunc("/getUserinfo-second", getUserinfoSecond)
-	fmt.Println("Server is running at http://localhost:8000")
+	routes.CategoryRoutes(mux)
+
+	fmt.Println("Server running at http://localhost:8000")
 	err := http.ListenAndServe(":8000", mux)
 	if err != nil {
-		log.Fatal("server failed", err)
+		log.Fatal("Server failed:", err)
 	}
-
 }
