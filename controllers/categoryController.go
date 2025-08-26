@@ -28,32 +28,38 @@ func GetCategories(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(categories)
 }
 
-func getCats(w http.ResponseWriter, r *http.Request){
-	rows, err := database.DB.Query("SELECT id, name from categories")
+func UpateCategory(w http.ResponseWriter, r *http.Request) {
+	var req models.Category
+	err := json.NewDecoder(r.Body).Decode(&req)
+
+	if err != nil {
+		http.Error(w, "response Error", http.StatusInternalServerError)
+		return
+	}
+
+	result, err := database.DB.Exec("UPDATE categories SET name = ? WHERE id = ? ", req.Name, req.ID)
 	if err != nil {
 		http.Error(w, "DB Error", http.StatusInternalServerError)
 		return
 	}
-defer rows.Close()
 
-	var catObject []models.Category
-	for rows.Next(){
-		var c models.Category
-		if error :=rows.Scan(&c.ID, &c.Name); error != nil {
-			http.Error(w, "Scan error", http.StatusInternalServerError)
-			return
-		}
-		catObject = append(catObject, c)
-	}
-	if err := rows.Err(); err != nil{
-		http.Error(w, "rows Iteration Errorserver error", http.StatusInternalServerError)
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		http.Error(w, "Failed to check rows affected", http.StatusInternalServerError)
 		return
 	}
-	w.Header().Set("Content-Type","application/json")
-  if error := json.NewEncoder(w).Encode(catObject); error != nil {
-	http.Error(w, "jsonEncode Error", http.StatusInternalServerError)
-	return
-  }
+
+	if rowsAffected == 0 {
+		http.Error(w, "No category found with given ID", http.StatusNotFound)
+		return
+	}
+	resMessage := models.Response{
+		Message: "Success Update",
+		Status:  200,
+		Data:    req,
+	}
+	w.Header().Set("Content-type", "application/json")
+	json.NewEncoder(w).Encode(resMessage)
 }
 
 func AddCategory(w http.ResponseWriter, r *http.Request) {
@@ -65,7 +71,6 @@ func AddCategory(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-
 	response, err := database.DB.Exec("INSERT INTO categories (name) VALUES (?)", c.Name)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -75,7 +80,7 @@ func AddCategory(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println(response, id)
 	customeRes := models.Category{
-		ID: int(id),
+		ID:   int(id),
 		Name: c.Name,
 	}
 
