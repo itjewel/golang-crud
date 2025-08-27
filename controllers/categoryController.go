@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -97,6 +96,9 @@ func DeleteCategory(w http.ResponseWriter, r *http.Request) {
 	// log.Println("Error", id)
 }
 
+func Jewel(w http.ResponseWriter, r *http.Request){
+println("hello")
+}
 func AddCategory(w http.ResponseWriter, r *http.Request) {
 
 	var c models.CategoryCreateRequest
@@ -113,7 +115,7 @@ func AddCategory(w http.ResponseWriter, r *http.Request) {
 	}
 	id, _ := response.LastInsertId()
 
-	fmt.Println(response, id)
+	//fmt.Println(response, id)
 	customeRes := models.Category{
 		ID:   int(id),
 		Name: c.Name,

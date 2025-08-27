@@ -11,7 +11,10 @@ import (
 var DB *sql.DB
 
 func Connect() {
-	dsn := "root:admin@tcp(127.0.0.1:3306)/go-gin-crud"
+	dsn := "root:admin@tcp(127.0.0.1:3306)/golang-crud?parseTime=true"
+
+
+
 	db, err := sql.Open("mysql", dsn)
 	if err != nil {
 		log.Fatal("DB Connection Error:", err)
