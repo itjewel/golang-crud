@@ -81,6 +81,7 @@ func DeleteCategory(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "sql Error", http.StatusInternalServerError)
 		return
 	}
+
 	rowErrectFields, _ := result.RowsAffected()
 	if rowErrectFields == 0 {
 		http.Error(w, "No fild updatede", http.StatusNotFound)
@@ -96,8 +97,8 @@ func DeleteCategory(w http.ResponseWriter, r *http.Request) {
 	// log.Println("Error", id)
 }
 
-func Jewel(w http.ResponseWriter, r *http.Request){
-println("hello")
+func Jewel(w http.ResponseWriter, r *http.Request) {
+	println("hello")
 }
 func AddCategory(w http.ResponseWriter, r *http.Request) {
 
@@ -123,4 +124,43 @@ func AddCategory(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(customeRes)
+}
+
+func GetAllItem(w http.ResponseWriter, r *http.Request) {
+	res, err := database.DB.Query("SELECT id,name FROM categories")
+	if err != nil {
+		http.Error(w, "Database Error", http.StatusInternalServerError)
+	}
+	defer res.Close()
+	var responseData []models.Category
+	for res.Next() {
+		var c models.Category
+		res.Scan(&c.ID, &c.Name)
+		responseData = append(responseData, c)
+	}
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(responseData)
+}
+
+func GetOneItem(w http.ResponseWriter, r *http.Request) {
+	var reqData models.Category
+	err := json.NewDecoder(r.Body).Decode(&reqData)
+	if err != nil {
+		http.Error(w, "Decode Error", http.StatusInternalServerError)
+		return
+	}
+	var newObject models.Category
+	erre := database.DB.QueryRow(
+		"SELECT id, name FROM categories WHERE id = ?",
+		reqData.ID,
+	).Scan(&newObject.ID, &newObject.Name)
+
+	if erre != nil {
+		log.Printf("query", erre)
+		http.Error(w, "Database Error", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(newObject)
 }

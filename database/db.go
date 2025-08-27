@@ -11,9 +11,7 @@ import (
 var DB *sql.DB
 
 func Connect() {
-	dsn := "root:admin@tcp(127.0.0.1:3306)/golang-crud?parseTime=true"
-
-
+	dsn := "root:admin@tcp(127.0.0.1:3306)/go-gin-crud"
 
 	db, err := sql.Open("mysql", dsn)
 	if err != nil {
@@ -25,6 +23,6 @@ func Connect() {
 		log.Fatal("DB Ping Error:", err)
 	}
 
-	fmt.Println("✅ Successfully connected to MySQL")
+	fmt.Println(" Successfully connected to MySQL")
 	DB = db
 }
