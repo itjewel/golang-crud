@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -11,7 +12,7 @@ import (
 )
 
 func GetCategories(w http.ResponseWriter, r *http.Request) {
-	rows, err := database.DB.Query("SELECT id, name FROM categories")
+	rows, err := database.DB.Query("SELECT id, name,price FROM categories")
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -21,7 +22,10 @@ func GetCategories(w http.ResponseWriter, r *http.Request) {
 	var categories []models.Category
 	for rows.Next() {
 		var c models.Category
-		rows.Scan(&c.ID, &c.Name)
+		if err := rows.Scan(&c.ID, &c.Name, &c.Price); err != nil {
+			http.Error(w, err.Error(), http.StatusNoContent)
+			continue
+		}
 		categories = append(categories, c)
 	}
 
@@ -109,21 +113,27 @@ func AddCategory(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response, err := database.DB.Exec("INSERT INTO categories (name) VALUES (?)", c.Name)
+	response, err := database.DB.Exec("INSERT INTO categories (name, price) VALUES (?, ?)", c.Name, c.Price)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 	id, _ := response.LastInsertId()
 
-	//fmt.Println(response, id)
 	customeRes := models.Category{
-		ID:   int(id),
-		Name: c.Name,
+		ID:    int(id),
+		Name:  c.Name,
+		Price: float64(c.Price),
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(customeRes)
+
+	jsonData, err := json.Marshal(customeRes)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+	w.Write(jsonData)
+
 }
 
 func GetAllItem(w http.ResponseWriter, r *http.Request) {
@@ -163,4 +173,70 @@ func GetOneItem(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(newObject)
+}
+
+func GetLike(w http.ResponseWriter, r *http.Request) {
+	var queryParam = r.URL.Query().Get("name")
+
+	res, err := database.DB.Query("SELECT id,name FROM categories WHERE name LIKE ?", "%"+queryParam+"%")
+
+	if err != nil {
+		log.Println("db error", err)
+		return
+	}
+	defer res.Close()
+
+	var responseObject []models.Category
+	for res.Next() {
+		var c models.Category
+		if err := res.Scan(&c.ID, &c.Name); err != nil {
+			log.Println("db error", err)
+			continue
+		}
+		responseObject = append(responseObject, c)
+
+	}
+	w.Header().Set("Content-Type", "application/json")
+	jsonData, err := json.Marshal(responseObject)
+
+	if err != nil {
+		log.Println("db error", err)
+		return
+	}
+	w.Write(jsonData)
+}
+
+func GetRange(w http.ResponseWriter, r *http.Request) {
+	from := r.URL.Query().Get("from")
+	to := r.URL.Query().Get("to")
+
+	res, err := database.DB.Query("SELECT id,name,price FROM categories WHERE price BETWEEN ? AND ?", from, to)
+
+	if err != nil {
+		log.Println("db error", err)
+		return
+	}
+	defer res.Close()
+
+	var responseObject []models.Category
+	for res.Next() {
+		var c models.Category
+		if err := res.Scan(&c.ID, &c.Name, &c.Price); err != nil {
+			log.Println("db error", err)
+			continue
+		}
+		responseObject = append(responseObject, c)
+
+	}
+	w.Header().Set("Content-Type", "application/json")
+	jsonData, err := json.Marshal(responseObject)
+
+	if err != nil {
+		log.Println("db error", err)
+		return
+	}
+	w.Write(jsonData)
+}
+func GetSort(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Like search")
 }
