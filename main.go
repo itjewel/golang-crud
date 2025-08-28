@@ -22,7 +22,8 @@ func main() {
 	defer database.DB.Close()
 
 	mux := http.NewServeMux()
-	routes.CategoryRoutes(mux) // pass controller if needed
+	routes.CategoryRoutes(mux)
+	routes.ProductRoutes(mux)
 
 	fmt.Println("Server running at http://localhost:8000")
 	err = http.ListenAndServe(":8000", mux)

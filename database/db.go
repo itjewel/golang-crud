@@ -7,9 +7,8 @@ import (
 	"os"
 
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/golang-migrate/migrate/v4"
-	_ "github.com/golang-migrate/migrate/v4/database/mysql"
-	_ "github.com/golang-migrate/migrate/v4/source/file"
+	// _ "github.com/golang-migrate/migrate/v4/database/mysql"
+	// _ "github.com/golang-migrate/migrate/v4/source/file"
 	"github.com/joho/godotenv"
 )
 
@@ -42,18 +41,6 @@ func Connect() {
 	if err != nil {
 		log.Fatal("DB Ping Error:", err)
 	}
-
-	//  migratem, err := migrate.New("file://migrations", dsn)
-	 // --- Migration call ---
-    migrateDSN := fmt.Sprintf("mysql://%s:%s@tcp(%s:%s)/%s", user, pass, host, port, dbname)
-    m, err := migrate.New("file://migrations", migrateDSN)
-    if err != nil {
-        log.Fatal("Migration init error:", err)
-    }
-
-    if err := m.Up(); err != nil && err.Error() != "no change" {
-        log.Fatal("Migration failed:", err)
-    }
 
 	fmt.Println(" Successfully connected to MySQL")
 	DB = db
