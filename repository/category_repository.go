@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"context"
 	"golang-crud/database"
 	"golang-crud/models"
 )
@@ -8,8 +9,8 @@ import (
 type CategoryRepository struct{}
 
 // Get all categories
-func (r *CategoryRepository) GetAll() ([]models.Category, error) {
-	rows, err := database.DB.Query("SELECT id, name, price FROM categories")
+func (r *CategoryRepository) GetAll(ctx context.Context) ([]models.Category, error) {
+	rows, err := database.DB.QueryContext(ctx, "SELECT id, name, price FROM categories")
 	if err != nil {
 		return nil, err
 	}

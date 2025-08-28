@@ -19,6 +19,7 @@ func main() {
 	}
 
 	database.Connect() // DB connect
+	defer database.DB.Close()
 
 	mux := http.NewServeMux()
 	routes.CategoryRoutes(mux) // pass controller if needed

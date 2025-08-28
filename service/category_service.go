@@ -1,6 +1,7 @@
 package service
 
 import (
+	"context"
 	"errors"
 	"golang-crud/models"
 	"golang-crud/repository"
@@ -11,8 +12,8 @@ type CategoryService struct {
 }
 
 // Get all categories
-func (s *CategoryService) GetAllCategories() ([]models.Category, error) {
-	return s.Repo.GetAll()
+func (s *CategoryService) GetAllCategories(ctx context.Context) ([]models.Category, error) {
+	return s.Repo.GetAll(ctx)
 }
 
 // Get category by ID

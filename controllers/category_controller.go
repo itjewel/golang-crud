@@ -15,7 +15,8 @@ type CategoryController struct {
 
 // GET /categories
 func (c *CategoryController) GetCategories(w http.ResponseWriter, r *http.Request) {
-	data, err := c.Service.GetAllCategories()
+	ctx := r.Context()
+	data, err := c.Service.GetAllCategories(ctx)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
