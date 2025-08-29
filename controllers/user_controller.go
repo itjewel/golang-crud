@@ -31,54 +31,8 @@ func (uc *UserControllerService) AddUser(w http.ResponseWriter, r *http.Request)
 	json.NewEncoder(w).Encode(response)
 }
 
-/*
 func (uc *UserControllerService) BulkUpload(w http.ResponseWriter, r *http.Request) {
-	// Open JSON file
-	file, err := os.Open("utls/user.json") // adjust path as per run location
-	if err != nil {
-		http.Error(w, "Cannot open file", http.StatusInternalServerError)
-		return
-	}
-	defer file.Close()
 
-	// Read file
-	data, err := ioutil.ReadAll(file)
-	if err != nil {
-		http.Error(w, "Cannot read file", http.StatusInternalServerError)
-		return
-	}
-
-	// Unmarshal JSON into a slice of users
-	var users []models.Users
-	if err := json.Unmarshal(data, &users); err != nil {
-		http.Error(w, "Invalid JSON format", http.StatusInternalServerError)
-		return
-	}
-
-	// Optionally: save users to DB using service
-	// for _, u := range users {
-	//     uc.Service.AddUser(u)
-	// }
-
-	// Response
-	response := map[string]interface{}{
-		"status": "success",
-		"data":   users, // send proper JSON array
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(response)
-}
-
-*/
-
-func (uc *UserControllerService) BulkUpload(w http.ResponseWriter, r *http.Request) {
-	// file, err := os.Open("utls/user.json")
-	// if err != nil {
-	// 	log.Println("no get Right way")
-	// 	return
-	// }
-	// defer file.Close()
 	getFile, err := ioutil.ReadFile("utls/user.json")
 	if err != nil {
 		log.Println("Byte problem Right way")
@@ -103,4 +57,15 @@ func (uc *UserControllerService) BulkUpload(w http.ResponseWriter, r *http.Reque
 	}
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(response)
+}
+
+func (uc *UserControllerService) GeAllUser(w http.ResponseWriter, r *http.Request) {
+	res, err := uc.Service.GetUsers()
+	if err != nil {
+		log.Println(err)
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(res)
+
 }

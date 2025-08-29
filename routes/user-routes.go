@@ -13,5 +13,6 @@ func UserRoutes(mux *http.ServeMux) {
 	handler := controllers.UserControllerService{Service: service}
 	mux.HandleFunc("POST /user-add", handler.AddUser)
 	mux.HandleFunc("GET /bulk-user", handler.BulkUpload)
+	mux.HandleFunc("GET /users/all-users", handler.GeAllUser)
 
 }

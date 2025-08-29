@@ -4,6 +4,7 @@ import (
 	"errors"
 	"golang-crud/models"
 	"golang-crud/repository"
+	"log"
 )
 
 type UserService struct {
@@ -24,4 +25,13 @@ func (s *UserService) AddUser(u models.Users) (*models.Users, error) {
 	u.Id = int(id)
 	return &u, nil
 
+}
+
+func (s *UserService) GetUsers() ([]models.Users, error) {
+	res, err := s.Repo.GetAll()
+	if err != nil {
+		log.Println(err)
+	}
+	log.Println(res)
+	return res, nil
 }
