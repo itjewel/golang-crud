@@ -2,7 +2,9 @@ package controllers
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
+	"os"
 	"strconv"
 
 	"golang-crud/models"
@@ -63,4 +65,26 @@ func (c *CategoryController) DeleteCategory(w http.ResponseWriter, r *http.Reque
 		return
 	}
 	json.NewEncoder(w).Encode(map[string]string{"message": "Deleted successfully"})
+}
+
+func (c *CategoryController) BulkUpload(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	bytefile, err := os.ReadFile("utls/category.json")
+	if err != nil {
+		log.Println("File Not working", err)
+		return
+	}
+	var getValue []models.Category
+	if err := json.Unmarshal(bytefile, &getValue); err != nil {
+		log.Println("not encodeing data")
+	}
+	res, _ := c.Service.BulkUpload(ctx, getValue)
+
+	customResponse := map[string]interface{}{
+		"message": res,
+	}
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(customResponse)
+	log.Println("insert success")
+
 }

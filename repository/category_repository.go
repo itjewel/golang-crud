@@ -101,3 +101,15 @@ func (r *CategoryRepository) GetByPriceRange(from, to float64) ([]models.Categor
 	}
 	return categories, nil
 }
+
+func (r *CategoryRepository) Seeding(ctx context.Context, getValue []models.Category) (string, error) {
+	for _, value := range getValue {
+		_, err := database.DB.ExecContext(ctx, "INSERT INTO categories (name,price) VALUES (?,?)", value.Name, value.Price)
+		if err != nil {
+			return "not update", nil
+			continue
+		}
+
+	}
+	return "insert Succfully", nil
+}

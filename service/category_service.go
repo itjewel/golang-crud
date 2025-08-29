@@ -70,3 +70,11 @@ func (s *CategoryService) SearchCategoryByName(name string) ([]models.Category, 
 func (s *CategoryService) GetCategoriesByPriceRange(from, to float64) ([]models.Category, error) {
 	return s.Repo.GetByPriceRange(from, to)
 }
+
+func (s *CategoryService) BulkUpload(ctx context.Context, getValue []models.Category) (string, error) {
+	value, err := s.Repo.Seeding(ctx, getValue)
+	if err != nil {
+		return "Not uploded", err
+	}
+	return value, nil
+}

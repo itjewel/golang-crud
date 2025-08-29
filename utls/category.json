@@ -1,0 +1,7 @@
+[
+    {"name":"Phone","price":12000},
+    {"name":"Computer","price":100000},
+    {"name":"Headphone","price":900},
+    {"name":"EarPhone","price":330},
+    {"name":"Chair","price":4000}
+]
