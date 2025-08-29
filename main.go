@@ -21,6 +21,11 @@ func main() {
 	database.Connect() // DB connect
 	defer database.DB.Close()
 
+	// // Reusable migration function
+	// err := database.RunMigration(action)
+	// if err != nil {
+	// 	log.Fatal("Migration failed:", err)
+	// }
 	mux := http.NewServeMux()
 	routes.CategoryRoutes(mux)
 	routes.ProductRoutes(mux)

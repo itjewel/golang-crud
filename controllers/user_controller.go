@@ -8,7 +8,6 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"os"
 )
 
 type UserControllerService struct {
@@ -74,13 +73,13 @@ func (uc *UserControllerService) BulkUpload(w http.ResponseWriter, r *http.Reque
 */
 
 func (uc *UserControllerService) BulkUpload(w http.ResponseWriter, r *http.Request) {
-	file, err := os.Open("utls/user.json")
-	if err != nil {
-		log.Println("no get Right way")
-		return
-	}
-	defer file.Close()
-	getFile, err := ioutil.ReadAll(file)
+	// file, err := os.Open("utls/user.json")
+	// if err != nil {
+	// 	log.Println("no get Right way")
+	// 	return
+	// }
+	// defer file.Close()
+	getFile, err := ioutil.ReadFile("utls/user.json")
 	if err != nil {
 		log.Println("Byte problem Right way")
 		return
