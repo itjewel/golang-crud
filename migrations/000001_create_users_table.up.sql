@@ -1,5 +1,7 @@
-CREATE TABLE categories (
+CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    price DECIMAL(10,2) NOT NULL
+    username VARCHAR(255) NULL,
+    email VARCHAR(255) NULL,
+    password VARCHAR(255) NULL,
+    address VARCHAR(255) NULL
 );
