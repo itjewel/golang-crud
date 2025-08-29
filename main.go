@@ -24,6 +24,7 @@ func main() {
 	mux := http.NewServeMux()
 	routes.CategoryRoutes(mux)
 	routes.ProductRoutes(mux)
+	routes.UserRoutes(mux)
 
 	fmt.Println("Server running at http://localhost:8000")
 	err = http.ListenAndServe(":8000", mux)

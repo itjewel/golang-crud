@@ -12,7 +12,8 @@ type ControllerService struct {
 }
 
 func (pc *ControllerService) GetProductInfo(w http.ResponseWriter, r *http.Request) {
-	data, err := pc.Service.GetProductService()
+	ctx := r.Context()
+	data, err := pc.Service.GetProductService(ctx)
 	if err != nil {
 		return
 	}
@@ -28,7 +29,8 @@ func (pc *ControllerService) AddProduct(w http.ResponseWriter, r *http.Request) 
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	responseValue, err := pc.Service.AddProduct(p)
+	ctx := r.Context()
+	responseValue, err := pc.Service.AddProduct(ctx, p)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
