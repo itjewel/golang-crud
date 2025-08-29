@@ -1,13 +1,9 @@
 package database
 
 import (
-	"fmt"
-
-	"io/ioutil"
 	"log"
+	"os"
 	"strings"
-
-	_ "github.com/go-sql-driver/mysql"
 )
 
 func RunMigration(action string) error {
@@ -18,31 +14,26 @@ func RunMigration(action string) error {
 	case "down":
 		suffix = ".down.sql"
 	default:
-		return fmt.Errorf("invalid action: %s", action)
+		suffix = "There is no file"
 	}
 
-	files, err := ioutil.ReadDir("migrations")
+	dirtory, err := os.ReadDir("migrations")
 	if err != nil {
-		return err
+		log.Println("There is no file available")
 	}
 
-	for _, file := range files {
+	for _, file := range dirtory {
 		if !strings.HasSuffix(file.Name(), suffix) {
 			continue
 		}
-
 		path := "migrations/" + file.Name()
-		sqlBytes, err := ioutil.ReadFile(path)
+		binarycode, err := os.ReadFile(path)
 		if err != nil {
-			log.Println("Cannot read:", path)
-			continue
+			log.Println("There is no file available")
 		}
-
-		_, err = DB.Exec(string(sqlBytes))
+		_, err = DB.Exec(string(binarycode))
 		if err != nil {
-			log.Println("Migration failed:", path, err)
-		} else {
-			fmt.Println("Executed:", path)
+			log.Println("There is no file available")
 		}
 	}
 

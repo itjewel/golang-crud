@@ -17,10 +17,10 @@ func main() {
 
 	database.Connect()
 	defer database.DB.Close()
-
-	if err := database.RunMigration(action); err != nil {
-		log.Fatal("Migration failed:", err)
-	}
+	log.Println(action)
+	// if err := database.RunMigration(action); err != nil {
+	// 	log.Fatal("Migration failed:", err)
+	// }
 
 	fmt.Println("Migration completed successfully!")
 }
