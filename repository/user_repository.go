@@ -69,3 +69,38 @@ func (u *UserRepository) TextSearch(req models.Users) ([]models.Users, error) {
 
 	return customeObject, nil
 }
+
+func (u *UserRepository) Update(req models.Users) (int64, error) {
+	res, err := database.DB.Exec(
+		"UPDATE users SET username=?, email=?, password=?, address=? WHERE id=?",
+		req.Name, req.Email, req.Password, req.Address, req.Id,
+	)
+	if err != nil {
+		log.Println("Update error:", err)
+		return 0, err
+	}
+
+	rowsAffected, err := res.RowsAffected()
+	if err != nil {
+		log.Println("RowsAffected error:", err)
+		return 0, err
+	}
+
+	return rowsAffected, nil
+}
+
+func (u *UserRepository) DeleteUser(req models.Users) (int64, error) {
+	// var c models.Users
+	res, err := database.DB.Exec("DELECT FROM users where id =?", req.Id)
+	if err != nil {
+		log.Println(err, "jewel")
+		return 0, err
+	}
+	id, err := res.RowsAffected()
+	if err != nil {
+		log.Println(err, "jewel")
+		return 0, err
+	}
+
+	return id, nil
+}

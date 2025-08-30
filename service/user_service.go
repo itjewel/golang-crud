@@ -53,3 +53,41 @@ func (s *UserService) GetTextSearch(req models.Users) ([]models.Users, error) {
 	log.Println(res)
 	return res, nil
 }
+func (s *UserService) DeleteUser(req models.Users) error {
+	if req.Id == 0 {
+		log.Println("User id  is empty")
+		return nil
+	}
+	id, err := s.Repo.DeleteUser(req)
+
+	if err != nil {
+		log.Println(err)
+	}
+	if id == 0 {
+		log.Println("not deleted")
+	}
+	// customeObject := map[string]interface{}{
+	// 	Id: id,
+	// }
+	// log.Println(res)
+	return nil
+}
+
+func (s *UserService) UpdateUser(req models.Users) (*models.Users, error) {
+	// var object models.Users
+
+	if req.Name == "" {
+		log.Println("Name is empty")
+		return nil, nil
+	}
+	id, _ := s.Repo.Update(req)
+
+	if id == 0 {
+		log.Println("Not Update")
+		return nil, nil
+	}
+	// object.Id = int(id)
+	// object.Id = 1
+
+	return &req, nil
+}
