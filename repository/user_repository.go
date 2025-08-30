@@ -48,3 +48,24 @@ func (u *UserRepository) GetOneUser(userId int) (*models.Users, error) {
 
 	return &c, nil
 }
+
+func (u *UserRepository) TextSearch(req models.Users) ([]models.Users, error) {
+	// var c models.Users
+	res, err := database.DB.Query("SELECT id,username,email,address,password FROM users WHERE username LIKE ? OR email LIKE ? OR address LIKE ?  ORDER BY id DESC LIMIT 8 OFFSET 0", "%"+req.Name+"%", req.Name+"%", req.Name+"%")
+	if err != nil {
+		log.Println(err, "jewel")
+		return nil, err
+	}
+	defer res.Close()
+	var customeObject []models.Users
+	for res.Next() {
+		var i models.Users
+		if err := res.Scan(&i.Id, &i.Name, &i.Email, &i.Address, &i.Password); err != nil {
+			log.Println("error")
+			continue
+		}
+		customeObject = append(customeObject, i)
+	}
+
+	return customeObject, nil
+}

@@ -1,6 +1,6 @@
 [
-    {"id":1, "username":"kamal farazi 1","password":"123456","address":"dhaka, Bangladesh"},
-    {"id":2, "username":"kamal farazi 3","password":"123456","address":"dhaka, Bangladesh"},
-    {"id":3, "username":"kamal farazi 4","password":"123456","address":"dhaka, Bangladesh"},
-    {"id":4, "username":"kamal farazi 5","password":"123456","address":"dhaka, Bangladesh"}
+    {"id":1, "username":"kamal ","password":"123456","address":"Savar, Bangladesh"},
+    {"id":2, "username":"jamal","password":"123456","address":"gazipur, Bangladesh"},
+    {"id":3, "username":"nadim","password":"123456","address":"Mirpur, Bangladesh"},
+    {"id":4, "username":"zahid","password":"123456","address":"Motijeel, Bangladesh"}
 ]

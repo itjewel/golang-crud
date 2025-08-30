@@ -87,6 +87,23 @@ func (uc *UserControllerService) GetUser(w http.ResponseWriter, r *http.Request)
 	json.NewEncoder(w).Encode(res)
 
 }
+func (uc *UserControllerService) GetTextSearch(w http.ResponseWriter, r *http.Request) {
+	// userId := r.URL.Query().Get("user_id")
+	var c models.Users
+	if err := json.NewDecoder(r.Body).Decode(&c); err != nil {
+		log.Println("Input error")
+		return
+	}
+
+	res, err := uc.Service.GetTextSearch(c)
+	if err != nil {
+		log.Println(err)
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(res)
+
+}
 
 func (uc *UserControllerService) UpdateUser(w http.ResponseWriter, r *http.Request) {
 

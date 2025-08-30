@@ -44,3 +44,12 @@ func (s *UserService) GetUser(userId int) (*models.Users, error) {
 	log.Println(res)
 	return res, nil
 }
+
+func (s *UserService) GetTextSearch(req models.Users) ([]models.Users, error) {
+	res, err := s.Repo.TextSearch(req)
+	if err != nil {
+		log.Println(err)
+	}
+	log.Println(res)
+	return res, nil
+}

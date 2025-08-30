@@ -15,7 +15,9 @@ func UserRoutes(mux *http.ServeMux) {
 	mux.HandleFunc("GET /bulk-user", handler.BulkUpload)
 	mux.HandleFunc("GET /users/all-users", handler.GeAllUser)
 	mux.HandleFunc("GET /users/one", handler.GetUser)
+	mux.HandleFunc("POST /users/textsearch", handler.GetTextSearch)
+	mux.HandleFunc("POST /users/pagination", handler.GetUser)
 	mux.HandleFunc("POST /users/delete", handler.DeleteUser)
-	mux.HandleFunc("POST /users/update", handler.UpdateUser)
+	mux.HandleFunc("PUT /users/update", handler.UpdateUser)
 
 }
