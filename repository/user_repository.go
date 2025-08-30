@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"context"
 	"golang-crud/database"
 	"golang-crud/models"
 	"log"
@@ -70,8 +71,12 @@ func (u *UserRepository) TextSearch(req models.Users) ([]models.Users, error) {
 	return customeObject, nil
 }
 
-func (u *UserRepository) Update(req models.Users) (int64, error) {
-	res, err := database.DB.Exec(
+func (u *UserRepository) Update(ctx context.Context, req models.Users) (int64, error) {
+	tx, err := database.DB.Begin()
+	if err != nil {
+		return 0, err
+	}
+	res, err := tx.ExecContext(ctx,
 		"UPDATE users SET username=?, email=?, password=?, address=? WHERE id=?",
 		req.Name, req.Email, req.Password, req.Address, req.Id,
 	)
@@ -81,6 +86,11 @@ func (u *UserRepository) Update(req models.Users) (int64, error) {
 	}
 
 	rowsAffected, err := res.RowsAffected()
+	if err != nil {
+		log.Println("RowsAffected error:", err)
+		return 0, err
+	}
+	err = tx.Commit()
 	if err != nil {
 		log.Println("RowsAffected error:", err)
 		return 0, err

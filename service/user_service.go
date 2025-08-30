@@ -1,6 +1,7 @@
 package service
 
 import (
+	"context"
 	"errors"
 	"golang-crud/models"
 	"golang-crud/repository"
@@ -73,14 +74,14 @@ func (s *UserService) DeleteUser(req models.Users) error {
 	return nil
 }
 
-func (s *UserService) UpdateUser(req models.Users) (*models.Users, error) {
+func (s *UserService) UpdateUser(ctx context.Context, req models.Users) (*models.Users, error) {
 	// var object models.Users
 
 	if req.Name == "" {
 		log.Println("Name is empty")
 		return nil, nil
 	}
-	id, _ := s.Repo.Update(req)
+	id, _ := s.Repo.Update(ctx, req)
 
 	if id == 0 {
 		log.Println("Not Update")

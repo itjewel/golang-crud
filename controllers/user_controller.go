@@ -103,13 +103,14 @@ func (uc *UserControllerService) GetTextSearch(w http.ResponseWriter, r *http.Re
 }
 
 func (uc *UserControllerService) UpdateUser(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
 	var req models.Users
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		http.Error(w, "Input not valid", http.StatusInternalServerError)
 		return
 	}
 
-	res, err := uc.Service.UpdateUser(req)
+	res, err := uc.Service.UpdateUser(ctx, req)
 	if err != nil {
 		log.Println(err)
 	}
