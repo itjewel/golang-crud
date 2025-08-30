@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strconv"
 )
 
 type UserControllerService struct {
@@ -60,6 +61,46 @@ func (uc *UserControllerService) BulkUpload(w http.ResponseWriter, r *http.Reque
 }
 
 func (uc *UserControllerService) GeAllUser(w http.ResponseWriter, r *http.Request) {
+	res, err := uc.Service.GetUsers()
+	if err != nil {
+		log.Println(err)
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(res)
+
+}
+
+func (uc *UserControllerService) GetUser(w http.ResponseWriter, r *http.Request) {
+	userId := r.URL.Query().Get("user_id")
+	conUserIdInt, err := strconv.Atoi(userId)
+	if err != nil {
+		log.Println(err)
+	}
+
+	res, err := uc.Service.GetUser(conUserIdInt)
+	if err != nil {
+		log.Println(err)
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(res)
+
+}
+
+func (uc *UserControllerService) UpdateUser(w http.ResponseWriter, r *http.Request) {
+
+	res, err := uc.Service.GetUsers()
+	if err != nil {
+		log.Println(err)
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(res)
+
+}
+
+func (uc *UserControllerService) DeleteUser(w http.ResponseWriter, r *http.Request) {
 	res, err := uc.Service.GetUsers()
 	if err != nil {
 		log.Println(err)

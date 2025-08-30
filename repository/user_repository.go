@@ -36,3 +36,15 @@ func (u *UserRepository) GetAll() ([]models.Users, error) {
 	log.Println(customObject)
 	return customObject, nil
 }
+
+func (u *UserRepository) GetOneUser(userId int) (*models.Users, error) {
+	var c models.Users
+
+	err := database.DB.QueryRow("SELECT id,username,email,address,password FROM users WHERE id = ?", userId).Scan(&c.Id, &c.Name, &c.Email, &c.Address, &c.Password)
+	if err != nil {
+		log.Println(err, "jewel")
+		return nil, err
+	}
+
+	return &c, nil
+}

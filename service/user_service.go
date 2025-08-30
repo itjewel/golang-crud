@@ -35,3 +35,12 @@ func (s *UserService) GetUsers() ([]models.Users, error) {
 	log.Println(res)
 	return res, nil
 }
+
+func (s *UserService) GetUser(userId int) (*models.Users, error) {
+	res, err := s.Repo.GetOneUser(userId)
+	if err != nil {
+		log.Println(err)
+	}
+	log.Println(res)
+	return res, nil
+}
