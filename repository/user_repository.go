@@ -2,6 +2,9 @@ package repository
 
 import (
 	"context"
+	"database/sql"
+	"errors"
+	"fmt"
 	"golang-crud/database"
 	"golang-crud/models"
 	"log"
@@ -42,9 +45,9 @@ func (u *UserRepository) GetOneUser(userId int) (*models.Users, error) {
 	var c models.Users
 
 	err := database.DB.QueryRow("SELECT id,username,email,address,password FROM users WHERE id = ?", userId).Scan(&c.Id, &c.Name, &c.Email, &c.Address, &c.Password)
-	if err != nil {
-		log.Println(err, "jewel")
-		return nil, err
+	if err == sql.ErrNoRows {
+
+		return nil, errors.New("user not found")
 	}
 
 	return &c, nil
@@ -81,6 +84,7 @@ func (u *UserRepository) Update(ctx context.Context, req models.Users) (int64, e
 		req.Name, req.Email, req.Password, req.Address, req.Id,
 	)
 	if err != nil {
+		tx.Rollback()
 		log.Println("Update error:", err)
 		return 0, err
 	}
@@ -101,10 +105,10 @@ func (u *UserRepository) Update(ctx context.Context, req models.Users) (int64, e
 
 func (u *UserRepository) DeleteUser(req models.Users) (int64, error) {
 	// var c models.Users
-	res, err := database.DB.Exec("DELECT FROM users where id =?", req.Id)
+	res, err := database.DB.Exec("DELETE FROM users where id =?", req.Id)
 	if err != nil {
-		log.Println(err, "jewel")
-		return 0, err
+		// log.Println(err, "jewel")
+		return 0, fmt.Errorf("delete user failed %w", err)
 	}
 	id, err := res.RowsAffected()
 	if err != nil {

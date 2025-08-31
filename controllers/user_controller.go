@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"context"
 	"encoding/json"
 	"golang-crud/database"
 	"golang-crud/models"
@@ -9,6 +10,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"time"
 )
 
 type UserControllerService struct {
@@ -104,6 +106,8 @@ func (uc *UserControllerService) GetTextSearch(w http.ResponseWriter, r *http.Re
 
 func (uc *UserControllerService) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
 	var req models.Users
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		http.Error(w, "Input not valid", http.StatusInternalServerError)

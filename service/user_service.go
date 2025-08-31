@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"errors"
+	"fmt"
 	"golang-crud/models"
 	"golang-crud/repository"
 	"log"
@@ -31,9 +32,10 @@ func (s *UserService) AddUser(u models.Users) (*models.Users, error) {
 func (s *UserService) GetUsers() ([]models.Users, error) {
 	res, err := s.Repo.GetAll()
 	if err != nil {
-		log.Println(err)
+		// log.Println(err)
+		return nil, fmt.Errorf("service GetUsers failed: %w", err)
 	}
-	log.Println(res)
+	// log.Println(res)
 	return res, nil
 }
 
@@ -79,6 +81,7 @@ func (s *UserService) UpdateUser(ctx context.Context, req models.Users) (*models
 
 	if req.Name == "" {
 		log.Println("Name is empty")
+
 		return nil, nil
 	}
 	id, _ := s.Repo.Update(ctx, req)
